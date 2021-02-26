@@ -8,7 +8,7 @@
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="TrackMe"
+        android:label="VnExpress"
         android:largeHeap="true"
         android:supportsRtl="true"
         tools:replace="android:allowBackup">
