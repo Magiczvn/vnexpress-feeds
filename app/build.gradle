@@ -50,6 +50,9 @@ dependencies {
         exclude group: 'glide-parent'
     }
 
+    implementation "com.squareup.okhttp3:okhttp:3.12.8"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.12.8"
+
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.1"
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.squareup.retrofit2:converter-simplexml:2.6.1'
