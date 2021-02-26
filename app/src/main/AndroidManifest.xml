@@ -1,0 +1,30 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.tamnn.vnexpressfeeds">
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="TrackMe"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        tools:replace="android:allowBackup">
+
+
+        <activity
+            android:name=".feature.main.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="standard"
+            android:theme="@style/Theme.AppCompat.DayNight"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
