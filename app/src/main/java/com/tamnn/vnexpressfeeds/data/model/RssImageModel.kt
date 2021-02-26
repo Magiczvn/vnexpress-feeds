@@ -4,7 +4,7 @@ import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 
 @Root(name = "image", strict = false)
-class RssImage {
+class RssImageModel {
     @Element
     var url: String? = null
 

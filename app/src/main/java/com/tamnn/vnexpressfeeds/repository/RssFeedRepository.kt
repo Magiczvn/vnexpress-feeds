@@ -1,5 +1,8 @@
 package com.tamnn.vnexpressfeeds.repository
 
-interface RssFeedRepository {
+import com.tamnn.vnexpressfeeds.repository.model.Channel
+import io.reactivex.Single
 
+interface RssFeedRepository {
+    fun getRssFeed(): Single<Channel>
 }

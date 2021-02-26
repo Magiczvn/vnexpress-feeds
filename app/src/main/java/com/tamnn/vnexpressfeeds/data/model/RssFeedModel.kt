@@ -4,7 +4,7 @@ import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 
 @Root(name = "rss", strict = false)
-class RssFeed {
+class RssFeedModel {
     @Element
-    var channel: RssChannel? = null
+    var channel: RssChannelModel? = null
 }
