@@ -5,6 +5,7 @@ import org.simpleframework.xml.Root
 
 @Root(name = "rss", strict = false)
 class RssFeedModel {
-    @Element
+    @get:Element
+    @set:Element
     var channel: RssChannelModel? = null
 }

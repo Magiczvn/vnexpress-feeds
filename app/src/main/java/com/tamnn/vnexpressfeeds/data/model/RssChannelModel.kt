@@ -7,15 +7,19 @@ import org.simpleframework.xml.Root
 
 @Root(name = "channel", strict = false)
 class RssChannelModel {
-    @Element
+    @get:Element
+    @set:Element
     var title: String? = null
 
-    @Element
+    @get:Element
+    @set:Element
     var description: String? = null
 
-    @Element
+    @get:Element
+    @set:Element
     var image: RssImageModel? = null
 
-    @ElementList(inline = true, required = false)
+    @get:ElementList(inline = true, required = false)
+    @set:ElementList(inline = true, required = false)
     var item: List<RssItemModel>? = null
 }
