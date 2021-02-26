@@ -1,4 +1,7 @@
 package com.tamnn.vnexpressfeeds.repository.datasource
 
-class RssFeedDataSource {
+import com.tamnn.vnexpressfeeds.repository.model.Channel
+
+interface RssFeedDataSource {
+    fun getRssFeed(): Channel
 }

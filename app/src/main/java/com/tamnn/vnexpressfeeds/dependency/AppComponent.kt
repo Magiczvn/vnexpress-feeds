@@ -14,7 +14,7 @@ import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class])
+@Component(modules = [AppModule::class, RssFeedModule::class])
 interface AppComponent {
 
     val application: Application
