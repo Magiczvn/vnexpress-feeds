@@ -16,4 +16,7 @@ class RssItem {
 
     @Element
     var link: String? = null
+
+    @Element(name = "slash:comments")
+    var comments: Int? = null
 }
