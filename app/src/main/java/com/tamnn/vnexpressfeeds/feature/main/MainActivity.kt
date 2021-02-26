@@ -32,9 +32,6 @@ class MainActivity : BaseMvpActivity<MainContract.View, MainContract.Presenter, 
             val intent = Intent(context, MainActivity::class.java)
             return intent
         }
-
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
-
     }
 
     @Inject

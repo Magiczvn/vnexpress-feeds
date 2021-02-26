@@ -14,7 +14,7 @@ class ApiRssFeedDataSource(private val _Api: RssFeedApi):RssFeedDataSource{
             val channel = body.channel?: throw ApiException("Channel is empty")
             val articles = channel.item?.map {
                 val imageUrl = RegexUtil.getImageUrl(it.description.orEmpty()).orEmpty()
-                Article(it.title.orEmpty(), imageUrl, it.pubDate.orEmpty(), it.link.orEmpty(), it.comments?:0)
+                Article(it.title.orEmpty(), imageUrl, it.pubDate.orEmpty(), it.link.orEmpty())
             }
             Channel(channel.title.orEmpty(), channel.description.orEmpty(), channel.image?.url.orEmpty(), articles.orEmpty())
         } else {
