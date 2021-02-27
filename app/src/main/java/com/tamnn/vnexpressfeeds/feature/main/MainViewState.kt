@@ -9,4 +9,6 @@ import com.tamnn.vnexpressfeeds.repository.model.Channel
 class MainViewState(): BaseViewState() {
     var channel:Channel? = null
     var items: List<Item>? = null
+    var currentPosition: Int = 0
+    var topOffset: Int = 0
 }

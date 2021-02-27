@@ -10,6 +10,10 @@ interface MainContract {
     }
 
     interface Presenter:com.tamnn.vnexpressfeeds.mvp.Presenter<View, MainViewState> {
+        var currentPosition: Int
 
+        var topOffset: Int
+
+        fun refreshRssFeeds()
     }
 }

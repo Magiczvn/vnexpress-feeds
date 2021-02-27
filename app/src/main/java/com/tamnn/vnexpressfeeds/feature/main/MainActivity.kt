@@ -5,9 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.tamnn.vnexpressfeeds.R
 import com.tamnn.vnexpressfeeds.MyApplication
@@ -62,6 +65,8 @@ class MainActivity : BaseMvpActivity<MainContract.View, MainContract.Presenter, 
 
     private var _Disposable: CompositeDisposable? = null
 
+    lateinit var _LayoutManager: LinearLayoutManager
+
 
     private var permissionDenied = false
 
@@ -71,11 +76,17 @@ class MainActivity : BaseMvpActivity<MainContract.View, MainContract.Presenter, 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        AppCompatDelegate.setDefaultNightMode(if(MyApplication.get(this).isNightModeEnabled()) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+
         component.inject(this)
+
+        switchCompat?.isChecked = MyApplication.get(this).isNightModeEnabled()
 
         rvRssFeeds?.adapter = _Adapter
         _Adapter.setReady(true)
-        rvRssFeeds?.layoutManager = BaseLinearLayoutManager(this)
+        _LayoutManager = BaseLinearLayoutManager(this)
+        rvRssFeeds?.layoutManager = _LayoutManager
         if (intent.action == Intent.ACTION_MAIN && !isTaskRoot) {
             finish()
         }
@@ -89,6 +100,25 @@ class MainActivity : BaseMvpActivity<MainContract.View, MainContract.Presenter, 
 
                 }
             }, ErrorConsumer()))
+
+        switchCompat?.setOnCheckedChangeListener { compoundButton, checked ->
+            saveCurrentPosition()
+            MyApplication.get(this).toggleNightMode()
+            AppCompatDelegate.setDefaultNightMode(if(checked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
+        btnRefresh.setOnRefreshListener {
+
+            presenter.refreshRssFeeds()
+        }
+    }
+
+    private fun saveCurrentPosition(){
+        val firstItem = _LayoutManager.findFirstVisibleItemPosition()
+        val firstItemView: View = _LayoutManager.findViewByPosition(firstItem) ?: return
+        val topOffset = firstItemView.top
+        presenter.currentPosition = firstItem
+        presenter.topOffset = topOffset
     }
 
     private fun onArticleClicked(link: String){
@@ -100,6 +130,11 @@ class MainActivity : BaseMvpActivity<MainContract.View, MainContract.Presenter, 
 
     override fun showItems(items: List<Item>) {
         _Adapter.updateItems(items)
+        rvRssFeeds?.post {
+            _LayoutManager.scrollToPositionWithOffset(presenter.currentPosition, presenter.topOffset)
+        }
+        btnRefresh.isRefreshing = false
+
     }
 
     override fun onDestroy() {

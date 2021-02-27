@@ -24,13 +24,35 @@ class MainPresenter(private val _Application: Lazy<Application>,
     private var _GetRssFeedsDisposable: Disposable? = null
     private var _ShowRssFeedsDisposable: Disposable? = null
 
+    override var currentPosition
+        get() = mViewState.currentPosition
+        set(value) {
+            mViewState.currentPosition = value
+        }
+
+    override var topOffset: Int
+        get() = mViewState.topOffset
+        set(value) {
+            mViewState.topOffset = value
+        }
+
+    override fun refreshRssFeeds() {
+        topOffset = 0
+        currentPosition = 0
+        getRssFeeds(true)
+    }
 
     //region Private
     private val _WorkerScheduler: Scheduler by lazy {
         _SchedulerFactory.get().single()
     }
 
-     private fun getRssFeeds() {
+     private fun getRssFeeds(force: Boolean) {
+         if(!force && mViewState.channel != null) {
+             showRssFeedAsync()
+             return
+         }
+
          _GetRssFeedsDisposable?.dispose()
          _GetRssFeedsDisposable = _UseCaseFactory.get().getRssFeed()
             .subscribeOn(_SchedulerFactory.get().io())
@@ -70,16 +92,16 @@ class MainPresenter(private val _Application: Lazy<Application>,
 
     override fun onCreate(viewState: MainViewState) {
         super.onCreate(viewState)
-
     }
 
     override fun onAttachView(view: MainContract.View) {
         super.onAttachView(view)
-        getRssFeeds()
-
+        getRssFeeds(false)
     }
 
     override fun onDestroy() {
+        _GetRssFeedsDisposable?.dispose()
+        _ShowRssFeedsDisposable?.dispose()
         super.onDestroy()
     }
 

@@ -18,7 +18,7 @@
             android:name=".feature.main.MainActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="standard"
-            android:theme="@style/Theme.AppCompat.DayNight"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +30,7 @@
         <activity
             android:name=".feature.web.WebActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.DayNight" />
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
