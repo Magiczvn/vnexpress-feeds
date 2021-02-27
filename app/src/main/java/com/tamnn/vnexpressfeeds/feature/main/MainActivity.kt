@@ -13,15 +13,20 @@ import com.tamnn.vnexpressfeeds.R
 import com.tamnn.vnexpressfeeds.MyApplication
 import com.tamnn.vnexpressfeeds.app.adapter.recyclerview.BaseLinearLayoutManager
 import com.tamnn.vnexpressfeeds.app.adapter.recyclerview.Item
+import com.tamnn.vnexpressfeeds.common.ErrorConsumer
 import com.tamnn.vnexpressfeeds.common.RxBus
 import com.tamnn.vnexpressfeeds.dependency.DataCache
 import com.tamnn.vnexpressfeeds.dependency.HasComponent
 import com.tamnn.vnexpressfeeds.domain.SchedulerFactory
+import com.tamnn.vnexpressfeeds.feature.main.event.ArticleClickEvent
+import com.tamnn.vnexpressfeeds.feature.web.WebActivity
+import com.tamnn.vnexpressfeeds.feature.web.WebScreen
 import com.tamnn.vnexpressfeeds.mvp.BaseMvpActivity
 
 import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -75,7 +80,22 @@ class MainActivity : BaseMvpActivity<MainContract.View, MainContract.Presenter, 
             finish()
         }
 
-        _Disposable = CompositeDisposable()
+        _Disposable = CompositeDisposable(_Adapter.event
+            .throttleFirst(300L, TimeUnit.MILLISECONDS)
+            .observeOn(_SchedulerFactory.main())
+            .subscribe(Consumer {
+                when (it) {
+                    is ArticleClickEvent -> onArticleClicked(it.link)
+
+                }
+            }, ErrorConsumer()))
+    }
+
+    private fun onArticleClicked(link: String){
+
+        val screen = WebScreen(url = link)
+        val intent = WebActivity.instance(this, screen)
+        startActivity(intent)
     }
 
     override fun showItems(items: List<Item>) {

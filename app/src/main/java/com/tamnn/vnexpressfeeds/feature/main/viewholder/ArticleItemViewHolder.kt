@@ -7,6 +7,7 @@ import androidx.core.text.HtmlCompat
 import com.bumptech.glide.RequestManager
 import com.tamnn.vnexpressfeeds.R
 import com.tamnn.vnexpressfeeds.app.adapter.recyclerview.BaseItemViewHolder
+import com.tamnn.vnexpressfeeds.feature.main.event.ArticleClickEvent
 import com.tamnn.vnexpressfeeds.feature.main.item.ArticleItem
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.article_item_viewholder.view.*
@@ -27,7 +28,8 @@ class ArticleItemViewHolder(parent: ViewGroup,
     }
 
     private fun onClick (){
-
+        val link = item?.link?:return
+        _EventSubject.onNext(ArticleClickEvent(link))
     }
 
     override fun onBindItem(item: ArticleItem) {

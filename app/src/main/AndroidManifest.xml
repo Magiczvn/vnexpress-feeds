@@ -26,6 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".feature.web.WebActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.DayNight" />
     </application>
 
 </manifest>
