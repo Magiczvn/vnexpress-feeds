@@ -9,6 +9,10 @@ import com.tamnn.vnexpressfeeds.domain.SchedulerFactory
 import com.tamnn.vnexpressfeeds.domain.UseCaseFactory
 import com.tamnn.vnexpressfeeds.feature.main.MainComponent
 import com.tamnn.vnexpressfeeds.feature.main.MainModule
+import com.tamnn.vnexpressfeeds.feature.web.WebComponent
+import com.tamnn.vnexpressfeeds.feature.web.WebModule
+import com.tamnn.vnexpressfeeds.feature.webtab.WebTabComponent
+import com.tamnn.vnexpressfeeds.feature.webtab.WebTabModule
 import dagger.Component
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -21,6 +25,10 @@ interface AppComponent {
     val bus: RxBus
 
     operator fun plus(mainModule: MainModule): MainComponent
+
+    operator fun plus(webModule: WebModule): WebComponent
+
+    operator fun plus(webTabModule: WebTabModule): WebTabComponent
 
     val useCaseFactory: UseCaseFactory
     val schedulerFactory: SchedulerFactory
