@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import android.preference.PreferenceManager
 import com.tamnn.vnexpressfeeds.common.RxBus
 import com.tamnn.vnexpressfeeds.dependency.AppComponent
 import com.tamnn.vnexpressfeeds.dependency.AppModule
@@ -14,6 +15,8 @@ import com.tamnn.vnexpressfeeds.dependency.HasComponent
 open class MyApplication : Application(), HasComponent<AppComponent>  {
 
     private lateinit var _AppComponent: AppComponent
+    val NIGHT_MODE = "NIGHT_MODE"
+    private var isNightModeEnabled = true
 
     private var _ActivityLifecycle: ActivityLifecycle? = null
 
@@ -26,8 +29,21 @@ open class MyApplication : Application(), HasComponent<AppComponent>  {
         _AppComponent = DaggerAppComponent.builder()
             .appModule(AppModule(this))
             .build()
+        val mPrefs = getSharedPreferences(NIGHT_MODE, Context.MODE_PRIVATE)
+        isNightModeEnabled = mPrefs.getBoolean(NIGHT_MODE, true)
     }
 
+    fun toggleNightMode(){
+        isNightModeEnabled = !isNightModeEnabled
+        val mPrefs = getSharedPreferences(NIGHT_MODE, Context.MODE_PRIVATE)
+        val editor = mPrefs.edit()
+        editor.putBoolean(NIGHT_MODE, isNightModeEnabled)
+        editor.apply()
+    }
+
+    fun isNightModeEnabled() : Boolean{
+        return isNightModeEnabled
+    }
 
 
     override fun onTerminate() {
