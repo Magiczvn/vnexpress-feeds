@@ -1,11 +1,15 @@
 package com.tamnn.vnexpressfeeds.feature.webtab
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebViewClient
+import android.webkit.*
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
 import com.tamnn.vnexpressfeeds.MyApplication
 import com.tamnn.vnexpressfeeds.R
 import com.tamnn.vnexpressfeeds.common.RxBus
@@ -62,16 +66,37 @@ class WebTabFragment : BaseMvpFragment<WebTabContract.View, WebTabContract.Prese
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         component.inject(this)
 
-        val s = webview_wv?.settings
-        s?.builtInZoomControls = false
-        s?.layoutAlgorithm = WebSettings.LayoutAlgorithm.NORMAL
-        s?.useWideViewPort = true
-        s?.loadWithOverviewMode = true
-        s?.domStorageEnabled = true
-        s?.databaseEnabled = true
-        s?.allowFileAccess = true
+        val settings = webview_wv.settings
 
-        webview_wv?.webViewClient = WebViewClient()
+
+        settings?.builtInZoomControls = false
+        settings?.layoutAlgorithm = WebSettings.LayoutAlgorithm.NORMAL
+        settings?.useWideViewPort = true
+        settings?.loadWithOverviewMode = true
+        settings?.javaScriptEnabled = true
+        settings?.domStorageEnabled = true
+        settings?.databaseEnabled = true
+        settings?.allowFileAccess = true
+
+        if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
+            WebSettingsCompat.setForceDarkStrategy(settings, WebSettingsCompat.DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING)
+        }
+
+        val isNightMode = MyApplication.get(context!!).isNightModeEnabled()
+        if(isNightMode){
+            if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+                WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_ON)
+            }
+        }
+        else {
+            if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+                WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_OFF)
+            }
+        }
+
+
+
+        webview_wv?.webViewClient = CustomWebViewClient()
         webview_wv?.webChromeClient = WebChromeClient()
 
         _Disposable = CompositeDisposable(
@@ -84,6 +109,20 @@ class WebTabFragment : BaseMvpFragment<WebTabContract.View, WebTabContract.Prese
 
         loadWeb()
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    inner class CustomWebViewClient : WebViewClient() {
+
+        override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
+
+            return true
+        }
+
+        override fun onPageFinished(view: WebView, url: String) {
+            if (webtab_srl?.isRefreshing == true) {
+                webtab_srl?.isRefreshing = false
+            }
+        }
     }
 
     override fun onDestroyView() {

@@ -52,8 +52,6 @@ class WebActivity : BaseMvpActivity<WebContract.View, WebContract.Presenter, Web
     //region Private
     private var _Disposable: CompositeDisposable? = null
 
-    private var _IsActivityTranslucent = true
-    //endregion Private
 
     var _WebTabFragment: WebTabFragment? = null
 
