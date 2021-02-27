@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat
 
 import com.tamnn.vnexpressfeeds.R
 import com.tamnn.vnexpressfeeds.MyApplication
+import com.tamnn.vnexpressfeeds.app.adapter.recyclerview.BaseLinearLayoutManager
+import com.tamnn.vnexpressfeeds.app.adapter.recyclerview.Item
 import com.tamnn.vnexpressfeeds.common.RxBus
 import com.tamnn.vnexpressfeeds.dependency.DataCache
 import com.tamnn.vnexpressfeeds.dependency.HasComponent
@@ -20,6 +22,7 @@ import com.tamnn.vnexpressfeeds.mvp.BaseMvpActivity
 import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -38,8 +41,9 @@ class MainActivity : BaseMvpActivity<MainContract.View, MainContract.Presenter, 
     lateinit var _SchedulerFactory: SchedulerFactory
     @Inject
     lateinit var _Bus: RxBus
+
     @Inject
-    lateinit var _DataCache: Lazy<DataCache>
+    lateinit var _Adapter: ArticleAdapter
 
     override fun onCreatePresenter(context: Context) = component.presenter
 
@@ -64,6 +68,9 @@ class MainActivity : BaseMvpActivity<MainContract.View, MainContract.Presenter, 
         super.onCreate(savedInstanceState)
         component.inject(this)
 
+        rvRssFeeds?.adapter = _Adapter
+        _Adapter.setReady(true)
+        rvRssFeeds?.layoutManager = BaseLinearLayoutManager(this)
         if (intent.action == Intent.ACTION_MAIN && !isTaskRoot) {
             finish()
         }
@@ -71,8 +78,14 @@ class MainActivity : BaseMvpActivity<MainContract.View, MainContract.Presenter, 
         _Disposable = CompositeDisposable()
     }
 
+    override fun showItems(items: List<Item>) {
+        _Adapter.updateItems(items)
+    }
+
     override fun onDestroy() {
         _Disposable?.dispose()
+        _Adapter.onDestroy()
+
         super.onDestroy()
     }
 }
